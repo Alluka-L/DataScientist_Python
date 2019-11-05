@@ -5,6 +5,7 @@ This tutorial is likely to be a long one and is still being updated.Hope you guy
 
 ## Catalogue
 > **Manipulating DataFrames with pandas**
+
  You will learn how to tidy,rearrange,and restructure your data using versatile pandas DataFrames.
 
 > **Merging DataFrames with pandas**
