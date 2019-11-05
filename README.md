@@ -4,7 +4,7 @@ A Data Scientist combines statistical and machine learning techniques with Pytho
 This tutorial is likely to be a long one and is still being updated.Hope you guys all enjoy it!
 
 ## Catalogue
-**Manipulating DataFrames with pandas**
+[**01.Manipulating DataFrames with pandas**](https://github.com/Alluka-L/DataScientist_Python/01.Manipulating_DataFrames_with_pandas)
 
 > You will learn how to tidy,rearrange,and restructure your data using versatile pandas DataFrames.
 
