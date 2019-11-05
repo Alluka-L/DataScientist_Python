@@ -5,10 +5,10 @@ This tutorial is likely to be a long one and is still being updated.Hope you guy
 
 ## Catalogue
 > **Manipulating DataFrames with pandas**
-You will learn how to tidy,rearrange,and restructure your data using versatile pandas DataFrames.
+> You will learn how to tidy,rearrange,and restructure your data using versatile pandas DataFrames.
 
 > **Merging DataFrames with pandas**
-This is about the act of combining,or merging,DataFrames,an essential part your Data Scientist's toolbox.
+> This is about the act of combining,or merging,DataFrames,an essential part your Data Scientist's toolbox.
 
 > **Analyzing Police Activity with pandas**
 Explore the Standford Open Policing Project dataset and analyze the import of gender on police behavior using pandas.
