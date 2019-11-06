@@ -4,7 +4,7 @@ A Data Scientist combines statistical and machine learning techniques with Pytho
 This tutorial is likely to be a long one and is still being updated.Hope you guys all enjoy it!
 
 ## Catalogue
-[**01.Manipulating DataFrames with pandas**](https://github.com/Alluka-L/DataScientist_Python/01.Manipulating_DataFrames_with_pandas.md)
+[**Manipulating DataFrames with pandas**](https://github.com/Alluka-L/DataScientist_Python/blob/master/Manipulating_DataFrames_with_pandas.md)
 
 > You will learn how to tidy,rearrange,and restructure your data using versatile pandas DataFrames.
 
@@ -64,7 +64,7 @@ This tutorial is likely to be a long one and is still being updated.Hope you guy
 
 > Learn how to cluster,transform,visualize,and extract insights from unlabeled datasets using scikit-learn and scipy.
 
-**Machine Learning with Tree-Based Models in Python**
+[**Machine Learning with Tree-Based Models in Python**](https://github.com/Alluka-L/DataScientist_Python/blob/master/Machine_Learning_with_Tree-Based_Models_in_Python.md)
 
 > In this course,you'll learn how to use tree-based models and ensembles for regression and classification using sciki...
 
