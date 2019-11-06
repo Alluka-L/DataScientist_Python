@@ -30,6 +30,10 @@
 
 > Classification and Regression Trees (CART) are a set of supervised learning models used for problems involving classification and regression. In this chapter, you'll be introduced to the CART algorithm
 
+### Decision tree for classification
+
+
+
 **`Classification-tree`**
 
 * Sequence of if-else questions about individual features.
@@ -120,3 +124,46 @@ A classification-model divides the feature-space into regions where all instance
 ![WX20191106-113619@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-113619@2x.png)
 
 > In contrast, as shown here on the right, a classification-tree produces `rectangular` decision-regions in the feature-space. This happens because at each split made by the tree, only one feature is involved. 
+
+### Classification tree Learning
+
+This part let's exampine how a classification-tree learns form data. First start by defining some terms.
+
+`Building Blocks of a Decision-Tree`
+
+* **Decision-Tree:** data structure consisting of  a hierarchy of nodes.
+
+* **Node:** question or prediction.
+
+  >  *Three kind of nodes:*
+  >
+  > * Root: no parent node, question giving rise to two children nodes.
+  > * Internal node: one parent node, question giving rise to two children nodes.
+  > * Leaf: one parent node, no children nodes --> prediction.
+
+  
+
+A `decision-tree` is data-structure consisting of a hierarchy of individual units called nodes. A `note` is a point that involves either a question or a prediction. The `root` is the node at which the decision-tree starts growing.It has no parent node and involves a question that gives rise to 2 children nodes through two branches.An `internal node` is a node that has a parent. It also involves a question that gives rise to 2 children nodes.Finally, a node that has no children is called a `leaf`. A leaf has one parent node and involves no questions. It's where a prediction is made.
+
+Recall that when a classification tree is trained on a labeled dataset, the tree learns patterns from the features in such a way to produce the purest leafs. In other words the tree is trained in such a way so that, in each leaf, one class-label is predominant.
+
+![WX20191106-165641@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-165641@2x.png)
+
+> In the tree diagram shown here, consider the case where an instance traverses the tree to reach the leaf on the left. In this leaf, there are 257 instances classified as benign and 7 instances classified as malignant. As a result, the tree's prediction for this instance would be: 'benign'.
+
+
+
+In order to understan  how a classification tree produces the purest leafs possible, let's first define the concept of `information gain`.
+
+`Information Gain (IG)`
+
+<img src="https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-170452@2x.png" alt="WX20191106-170452@2x" style="zoom:60%;" />
+
+The nodes of a classification tree are grown recursively; in other words, the obtention of an internal node or a leaf depends on the state of its predecessors. To produce the purest leafs possible, at each node, a tree asks a question involving one feature f and a split-point sp. But how does it know which feature and which split-point to pick? It does so by maximizing Information gain!
+
+The tree considers that every node contains information and aims at maximizing the Information Gain obtained after each split. Consider the case where a node with N sample is split into a left-node with Nleft samples and a right-node with Nright samples. The information gain for such split is given by the formula shown here.
+
+
+$$
+IG(\:f\:, \:sp\:)\ =\ I(\ parent\ )\ -\ \bigg(\frac{N_{left}}{N}\ I(\ left\ )+\frac{N_{right}}{N}\ I(\ right\ )\bigg)
+$$
