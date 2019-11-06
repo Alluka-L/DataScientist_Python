@@ -41,7 +41,7 @@ Given a labeled dataset, a classification tree learns a sequence of if-else ques
 
 To understand trees more concretely, we'll try to predict whether a tumor is malignant or benign in the `Wisconsin Breast Cancer` dataset using only 2 features.
 
-![WX20191106-100335@2x](imgs/WX20191106-100335@2x.png)
+![png](imgs/WX20191106-100335@2x.png)
 
 > The figure here shows a scatterplot of two cancerous cell features with malignant-tumors in blue and benign-tumors in red.
 
@@ -65,7 +65,7 @@ from sklearn.metrics import accuracy_score
 In order to obtain an unbiased estimate of a model's performance, you must evaluate it on an unseen test set. To do so, first split the data into 80% train and 20% test using `train_test_split()`.
 
 ```python
-# Split dataset into 80% train, 20 test.
+# Split dataset into 80% train, 20% test.
 X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                test_size=0.2,
                                                stratify=y,
