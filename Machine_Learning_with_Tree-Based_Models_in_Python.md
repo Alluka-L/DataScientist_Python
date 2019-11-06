@@ -41,13 +41,13 @@ Given a labeled dataset, a classification tree learns a sequence of if-else ques
 
 To understand trees more concretely, we'll try to predict whether a tumor is malignant or benign in the `Wisconsin Breast Cancer` dataset using only 2 features.
 
-![png](imgs/WX20191106-100335@2x.png)
+![png](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-100335@2x.png)
 
 > The figure here shows a scatterplot of two cancerous cell features with malignant-tumors in blue and benign-tumors in red.
 
 When a classification tree is trained on this dataset, the tree learns a sequence of if-else questions with each question involving one feature and one split-point. Take a look at the tree diagram here:
 
-![WX20191106-101212@2x](imgs/WX20191106-101212@2x.png)
+![WX20191106-101212@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-100335@2x.png/imgs/WX20191106-101212@2x.png)
 
 At the top, the tree asks whether the concave-points mean of an instance is >= 0.051. If it is, the instance traverses the True branch; otherwise, it traverses the False branch. Similarly, the instance keeps traversing the internal branches until it reaches an end. The label of the instance is then predicted to be that of the prevailing class at that end. The maximum number of branches separating the top from an extreme-end is known as the maximum depth which is equal to 2 here.
 
@@ -109,7 +109,7 @@ A classification-model divides the feature-space into regions where all instance
 
 **`Decision Boundary:`** surface separating different decision regions.
 
-![WX20191106-113250@2x](imgs/WX20191106-113250@2x.png)
+![WX20191106-113250@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-100335@2x.png/imgs/WX20191106-113250@2x.png)
 
 > The figure here shows the decision-regions of a linear-classifier.
 >
@@ -117,6 +117,6 @@ A classification-model divides the feature-space into regions where all instance
 
 **Decision Regions: CART vs. Linear Model**
 
-![WX20191106-113619@2x](imgs/WX20191106-113619@2x.png)
+![WX20191106-113619@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-100335@2x.png/imgs/WX20191106-113619@2x.png)
 
 > In contrast, as shown here on the right, a classification-tree produces `rectangular` decision-regions in the feature-space. This happens because at each split made by the tree, only one feature is involved. 
