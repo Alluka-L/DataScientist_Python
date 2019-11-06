@@ -1,10 +1,10 @@
 # Machine Learning with Tree-Based Models in Python
 
-## Course Description
+## 1.Course Description
 
-> Decision trees are supervised learning models used for problems involving classification and regression. Tree models present a high flexibility that comes at a price: on one hand, trees are able to capture complex non-linear relationships; on the other hand, they are prone to memorizing the noise present in a dataset. By aggregating the predictions of trees that are trained differently, ensemble methods take advantage of the flexibility of trees while reducing their tendency to memorize noise. Ensemble methods are used across a variety of fields and have a proven track record of winning many machine learning competitions. In this course, you'll learn how to use Python to train decision trees and tree-based models with the user-friendly scikit-learn machine learning library. You'll understand the advantages and shortcomings of trees and demonstrate how ensembling can alleviate these shortcomings, all while practicing on real-world datasets. Finally, you'll also understand how to tune the most influential hyperparameters in order to get the most out of your models.
+> Decision trees are supervised learning models used for problems involving classification and regression. Tree models present a high flexibility that comes at a price: on one hand, trees are able to capture complex non-linear relationships; on the other hand, they are prone to memorizing the noise present in a dataset. By aggregating the predictions of trees that are trained differently, ensemble methods take advantage of the flexibility of trees while reducing their tendency to memorize noise. Ensemble methods are used across a variety of fields and have a proven track record of winning many machine learning competitions. In this course, you'll learn how to use Python to train decision trees and tree-based models with the user-friendly scikit-learn machine learning library. You'll understand the advantages and shortcomings of trees and demonstrate how ensembling can alleviate these shortcomings. Finally, you'll also understand how to tune the most influential hyperparameters in order to get the most out of your models.
 
-## Overview
+## 2.Overview
 
 * **Chap 1:** Classification And Regression Tree (CART)
 
@@ -24,13 +24,13 @@
 
 * **Chap 4:** Model Tuning
 
-  > Understand how to  get the most out of your models through hyper-aremeter-tuning.
+  > Understand how to  get the most out of your models through hyper-paremeter-tuning.
 
-## Classification and Regression Trees
+## 3.Chapter 1 : Classification and Regression Trees
 
 > Classification and Regression Trees (CART) are a set of supervised learning models used for problems involving classification and regression. In this chapter, you'll be introduced to the CART algorithm
 
-### Decision tree for classification
+### 3.1 Decision tree for classification
 
 
 
@@ -125,7 +125,7 @@ A classification-model divides the feature-space into regions where all instance
 
 > In contrast, as shown here on the right, a classification-tree produces `rectangular` decision-regions in the feature-space. This happens because at each split made by the tree, only one feature is involved. 
 
-### Classification tree Learning
+### 3.2 Classification tree Learning
 
 This part let's exampine how a classification-tree learns form data. First start by defining some terms.
 
@@ -153,11 +153,11 @@ Recall that when a classification tree is trained on a labeled dataset, the tree
 
 
 
-In order to understan  how a classification tree produces the purest leafs possible, let's first define the concept of `information gain`.
+In order to understand  how a classification tree produces the purest leafs possible, let's first define the concept of `information gain`.
 
 `Information Gain (IG)`
 
-<img src="https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-170452@2x.png" alt="WX20191106-170452@2x" style="zoom:60%;" />
+<img src="https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-170452@2x.png" alt="WX20191106-170452@2x" style="zoom:50%;" />
 
 The nodes of a classification tree are grown recursively; in other words, the obtention of an internal node or a leaf depends on the state of its predecessors. To produce the purest leafs possible, at each node, a tree asks a question involving one feature f and a split-point sp. But how does it know which feature and which split-point to pick? It does so by maximizing Information gain!
 
@@ -165,5 +165,189 @@ The tree considers that every node contains information and aims at maximizing t
 
 
 $$
-IG(\:f\:, \:sp\:)\ =\ I(\ parent\ )\ -\ \bigg(\frac{N_{left}}{N}\ I(\ left\ )+\frac{N_{right}}{N}\ I(\ right\ )\bigg)
+IG(\ f\ , \ sp\ )\ =\ I(\ parent\ )\ -\ \bigg(\frac{N_{left}}{N}\ I(\ left\ )+\frac{N_{right}}{N}\ I(\ right\ )\bigg)
 $$
+
+> f: feature           sp: split-point
+
+A question that you may have in mind here is: 'What criterion is used to measure the impurity of a node?' Well, there are different criteria you can use among which are the `gini-index` and `entropy`. Let's describe how a classification tree learns.
+
+> If you guys still have confusion about gini-index or entropy. Please feel free to let me know. I will detail everything you need to know.
+
+`Classification-Tree Learning`
+
+* Nodes are grown recursively
+* At each node, split the data based on:
+  * feature f and split-point sp to maximize IG (node).
+  * if IG (node) = 0, declare the node a leaf. ... 
+
+When an unconstrained tree is trained, the nodes are grown recursively. In other words, a node exists based on the state of its predecessors. At a non-leaf node, the data is split based on feature f and split-point sp in such a way to maximize information gain.  If the information gain obtained by splitting a node is null, the node is declared a leaf. **Keep in mind that these rules are for unconstrained trees.** If you constrain the maximum depth of a tree to 2 for example, all nodes having a depth of 2 will be declared leafs even if the information gain obtained by splitting such nodes is not null.
+
+Revisiting the 2D breast-cancer dataset from the previous, you can set the information criterion of dt to the gini-index by setting the `criterion` parameter to `'gini'` as shown on the last line here.
+
+```python
+# Import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier
+# Import train_test_split
+from sklearn.model_selection import train_test_split
+# Import accuracy_score
+from sklearn.metrics import accuracy_score
+
+# Split dataset into 80% train, 20% test
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                              test_size=0.2,
+                                              stratify=y,
+                                              random_state=1)
+# Instantiate dt, set 'criterion' to 'gini'
+dt = DecisionTreeClassifier(criterion='gini', random_stat=1)
+```
+
+Now fit dt to the training set and predict the test set labels.
+
+```python
+# Fit dt to the training set
+dt.fit(X_train, y_train)
+
+# Predict test-set labels
+y_pred = dt.predtict(X_test)
+
+# Evaluate test-set accuracy
+accuracy_score(y_test, y_pred)
+```
+
+```python
+0.92105263157894735
+```
+
+> Most of the time, the gini index and entropy lead to the same results. The gini index is slightly faster to compute and is the default criterion used in the `DecisionTreeClassifier` model of scikit-learn.
+
+### 3.3 Decision tree for regression
+
+Let's learn how to train a decision tree for a regression problem.
+
+Recall that in regression, the target variable is continuous. In other words, the output of your model is a real value. 
+
+`Auto-mpg Dataset`
+
+Let's motivate our discussion of regression by introducing the `automobile miles-per-gallon dataset` from the UCI Machine Learning Repository.
+
+|      | mpg  | displ | hp   | weight | accel | origin | size |
+| :--- | ---- | ----- | ---- | ------ | ----- | ------ | ---- |
+| 0    | 18.0 | 250.0 | 88   | 3139   | 14.5  | US     | 15.0 |
+| 1    | 9.0  | 304.0 | 193  | 4732   | 18.5  | US     | 20.0 |
+| 2    | 36.1 | 91.0  | 60   | 1800   | 16.4  | Asia   | 10.0 |
+| 3    | 18.5 | 250.0 | 98   | 3525   | 19.0  | US     | 15.0 |
+| 4    | 34.3 | 97.0  | 78   | 2188   | 15.8  | Europe | 10.0 |
+| 5    | 32.9 | 119.0 | 100  | 2615   | 14.8  | Asia   | 10.0 |
+
+> This dataset consists of 6 features corresponding to the characteristics of a car and a continuous target variable labeled mpg which stand for miles-per-gallon.
+
+Our task is to predict the mpg consumption  of a car given these six features. To simplify the problem, here the analysis is restricted to only one feature corresponding to the displacement of a car. This feature is denoted by displ.
+
+![WX20191106-212039](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-212039.png)
+
+<center>Auto-mpg with one feature<center>
+
+> A 2D scatter plot of mpg versus displ shows that the mpg-consumption decreases nonlinearly with displacement.
+>
+> Note that linear models such as linear regression would not be able to capture such a non-linear trend.
+
+Let's see how you can train a decision tree with scikit-learn to solve this regression problem.
+
+`Regression-Tree in scikit-learn`
+
+Note that the feature X and the labels are already loaded in the environment.
+
+```python
+# Import DecisionTreeRegressor
+from sklearn.tree import DecisionTreeRegressor
+# Import train_test_split
+from sklearn.model_selection import train_test_split
+# Import mean_squared_error as MSE
+from sklearn.metrics import mean_squared_error as MSE
+```
+
+> First, import `DecisionTreeRegressor` from `sklearn.tree` and the functions `train_test_split()` from `sklearn.model_selection` and `mean_squared_error` as `MSE()` from `sklearn.metrics`.  
+
+```python
+# Split data into 80% train and 20% test
+X_train， X_test， y_train, y_test = train_test_split(X, y,
+                                              test_size=0.2,
+                                              random_state=3)
+```
+
+> Then, split the data into 80%-train and 20%-test using `train_test_split`.
+
+```python
+# Instantiate a DecisionTreeRegressor 'dt'
+dt = DecisionTreeRegressor(max_depth=4,
+                           min_samples_leaf=0.1,
+                           random_state=3)
+```
+
+> You can now instantiate the DecisionTreeRegressor() with a maximum depth of 4 by setting the parameter `max_depth` to 4. In addition, set the parameter `min_sample_leaf` to 0.1 to impose a stopping condition in which each leaf has to contain at least 10% of the training data.
+
+```python
+# Fit 'dt' to the training-set
+dt.fit(X_train, y_train)
+# Predict test_set labels
+y_pred = dt.predict(X_test)
+# Compute test-set MSE
+mse_dt = MSE(y_test, y_pred)
+# Compute test-set RMSE
+rmse_dt = mse_dt**(1/2)
+
+# Print rmse_dt
+print(rmse_dt)
+```
+
+```python
+5.1023068889
+```
+
+
+
+> Now fit dt to the training set and predict the test set labels. To obtain the `root-mean-squared-error` of your model on the test-set; proceed as follows:
+>
+> * evaluate the `mean-squared error` 
+> * raise the obtained value to the power 1/2
+
+`Information Criterion for Regression-Tree`
+
+Here, it's important to note that, when a regression tree is trained on a dataset, the impurity of a node is measured using the `mean-squared error` of the target in that node.
+$$
+I(\ node\ )\ = \ MSE(\ node\ )\ =\frac{1}{N_{node}}\sum_{i\in node}(y^{(i)}\ -\ \hat y_{node})^2
+$$
+
+$$
+\hat y_{node}\ =\ \frac{1}{N_{node}}\sum_{i\in node}y^{(i)}
+$$
+
+> MSE(node): mean-squared-error
+>
+> $\hat y_{node}$: mean-target-value
+
+This means that the regression tree tries to find the splits that produce leafs where in each leaf the target values are on average, the closest possible to to the mean-value of the labels in that particular leaf.
+
+**Prediction**
+
+As a new instance traverses the tree and reaches a certain leaf, its target-variable 'y' is computed as the average of the target-variables contained in that leaf as shown in this formula.
+$$
+\hat y_{pred}(leaf)\ =\ \frac{1}{N_{leaf}}\sum_{i\in leaf}y^{(i)}
+$$
+To highlight the importance of the flexibility of regression trees, take a look at this figure.
+
+![WX20191106-235128@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-235128@2x.png)
+
+> On the left we have a scatter plot of the data in blue along with the predictions of a linear regression model shown in black. The linear model fails to capture the non-linear trend exhibited by the data.
+>
+> On the right, we have the same scatter plot along with a red line corresponding to the predictions of the regression tree that you traind earlier. The regression tree shows a greater flexibility and is able to capture the non-linearity, though not fully.
+
+In the next chapter, you'll aggregate the predictions of a set of trees that are trained differently to obtain better results.
+
+## 4. Chapter 2: The Bias-Variance Tradeoff
+
+### 4.1 Generalization Error
+
+
+
