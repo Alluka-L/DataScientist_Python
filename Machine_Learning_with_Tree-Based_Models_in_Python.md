@@ -6,11 +6,11 @@
 
 ## 2.Overview
 
-* **Chap 1:** Classification And Regression Tree (CART) *(Done)*
+* **Chap 1:** Classification And Regression Tree (CART) $\color{green}{(Done)}$
 
   > Introduction to a set of supervised learning models known as Classification-And-Regression-Tree or **CART**.
 
-* **Chap 2:** The Bias-Variance Tradeoff
+* **Chap 2:** The Bias-Variance Tradeoff $\color{green}{(Done)}$
 
   > Understand the notions of bias-variance trade-off and model ensembleling.
 
@@ -247,8 +247,6 @@ Let's motivate our discussion of regression by introducing the `automobile miles
 Our task is to predict the mpg consumption  of a car given these six features. To simplify the problem, here the analysis is restricted to only one feature corresponding to the displacement of a car. This feature is denoted by displ.
 
 ![WX20191106-212039](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-212039.png)
-
-<center> Auto-mpg with one feature <center>
 
 
 > A 2D scatter plot of mpg versus displ shows that the mpg-consumption decreases nonlinearly with displacement.
@@ -574,3 +572,149 @@ Test MSE: 20.92
 ```
 
 Given that the training set error is smaller than the CV-error, we can deduce that dt overfits the training set and that it suffers from high variance. Notice how the CV and test set errors are roughly equal.
+
+### 4.3 Ensemble Learning
+
+Let's first recap what we learned from the proviso chapter about CARTs.
+
+**Advantages of CARTs**
+
+* Simple to understand
+* Simple to interpret
+* Ease to use
+* Flexibility: ability to describe non-linear dependancies
+* Preprocessing: no need  to standardize or normalize feature, ...
+
+**Limitations of CARTs**
+
+* Classification: can only produce of orthogonal decision boundaries.
+
+* Sensitive to small variations in the training set
+
+  > Sometimes , when a single point  is removed from the training set, a CART's learned parameters may changed drastically.
+
+* High variance: unconstrained CARTs may overfit the training set
+
+So a solution that takes advantage of the flexibility of  CARTs while reducing their tendency to memorize noise is `ensemble learning`.
+
+**Ensemble Learning**
+
+Ensemble learning can be summarized as follows:
+
+* Train defferent models on the same dataset
+
+* Let each model make its predictions
+
+* Meta-model: aggregates predictions of individual models and outputs a final prediction 
+
+* Final prediction: more robust and less prone to errors than each individual model
+
+* Best results: models are skillful in different ways
+
+  > which means that if some models make predictions that are way off, the other models should compensate these errors. In such case, the meta-model's predictions are more robust.
+
+Let's take a look at the diagram here to visually understand how ensemble learning works for a classification problem.
+
+![WX20191107-231029@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-231029@2x.png)
+
+* The training set is fed to different classifiers. 
+* Each classifier learns its parameters and makes predictions
+* These predictions are fed to a meta model which aggregates them and outputs a final prediction
+
+Let's now take a look at an ensemble technique known as the `voting classifier`.
+
+**Ensemble Learning in Practice: Voting Classifier**
+
+* More concretely, we'll consider a binary classification task.
+
+* The ensemble here consists of N classifiers making the predictions P0, P1,...to PN with P=0 or 1
+
+* Meta-model outputs the final prediction by hard voting
+
+  > To understand hard voting, consider a voting classifier that consists of 3 trained classifiers as shown in the diagram here.
+
+  ![WX20191107-233108@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-233108@2x.png)
+
+  > While classifiers 1 and 3 predict the label of 1 for a new data-point, classifier 2 predicts the label 0. In this case, 1 has 2 votes while 0 has 1 vote. As a result, the voting classifier predicts 1.
+
+**Voting Classifier in sklearn(Breast-Cancer dataset)**
+
+Now that you know what a voting classifier is, let's train one on the breast cancer dataset using scikit-learn. You'll do so using all the features in the dataset to predict whether a cell is malignant or not.
+
+In addition to the usual imports, import `LogisiticRegression`, `DecisionTreeClassifier`, and `KNeighborsClassifier`.
+
+```python
+# Import functions to compute accuracy and split data
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
+# Import models, including VotingClassifier meta-model
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier as KNN
+from sklearn.ensemble import VotingClassifier
+
+# Set seed for reproducibility
+SEED = 1
+```
+
+```python
+# Split data into 70% train and 30% test
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                    test_size=0.3,
+                                                    random_state=SEED)
+# Instantiate individual classifiers
+lr = LogisticRegression(random_state=SEED)
+knn = KNN()
+dt = DecisionTreeClassifier(random_state=SEED)
+
+# Define a list called classifier that contains the tuples (classifier_name, classifier)
+classifiers = [('Logistic Regression', lr),
+               ('K Nearest Neighbours', knn),
+               ('Classification Tree', dt)]
+```
+
+Now write a `for` loop to iterate over the list classifiers; fit each classifier to the training set, evaluate its accuracy on the test set and print the result.
+
+```python
+# Iterate over the defined list of tuples containing the classifiers
+for clf_name, clf in classifiers:
+    # fit clf to the training set
+    clf.fit(X_train, y_train)
+    
+    # Predict the labels of the test set
+    y_pred = clf.predict(X_test)
+    
+    # Evaluate the accuracy of clf on the test set
+    print('{:s} : {:.3f}'.format(clf_name, accuracy_score(y_test, y_pred)))
+```
+
+```python
+Logistic Regression:  0.947
+K Nearest Neighbours: 0.930
+Classification Tree:  0.930
+```
+
+The output shows that the best classifier LogisticRegression achieves an accuracy of 94.7%. Finally, you can instantiate a voting classifier vc by setting the `estimators` parameter to `classifiers`.
+
+```python
+# Instantiate a VotingClassifier 'vc'
+vc = VotingClassifier(estimators=classifiers)
+
+# Fit 'vc' to the training set and predict test set labels
+vc.fit(X_train, y_train)
+y_pred = vc.predict(X_test)
+
+# Evaluate the test-set accuracy of 'vc'
+print('Voting Classifier: {:.3f}'.format(accuracy_score(y_test, y_pred)))
+```
+
+```python
+Voting. Classifier: 0.953
+```
+
+This accuracy is higher than that achieved by any of the individual models in the ensemble.
+
+## 5. Chapter 3: Bagging and Random Forests
+
+$\color{red}{to\ be\ continued...}$
