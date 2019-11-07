@@ -1,12 +1,12 @@
 # Machine Learning with Tree-Based Models in Python
 
-## 1.Course Description
+## 1.Tutorial  Description
 
-> Decision trees are supervised learning models used for problems involving classification and regression. Tree models present a high flexibility that comes at a price: on one hand, trees are able to capture complex non-linear relationships; on the other hand, they are prone to memorizing the noise present in a dataset. By aggregating the predictions of trees that are trained differently, ensemble methods take advantage of the flexibility of trees while reducing their tendency to memorize noise. Ensemble methods are used across a variety of fields and have a proven track record of winning many machine learning competitions. In this course, you'll learn how to use Python to train decision trees and tree-based models with the user-friendly scikit-learn machine learning library. You'll understand the advantages and shortcomings of trees and demonstrate how ensembling can alleviate these shortcomings. Finally, you'll also understand how to tune the most influential hyperparameters in order to get the most out of your models.
+> Decision trees are supervised learning models used for problems involving classification and regression. Tree models present a high flexibility that comes at a price: on one hand, trees are able to capture complex non-linear relationships; on the other hand, they are prone to memorizing the noise present in a dataset. By aggregating the predictions of trees that are trained differently, ensemble methods take advantage of the flexibility of trees while reducing their tendency to memorize noise. Ensemble methods are used across a variety of fields and have a proven track record of winning many machine learning competitions. In this tutorial, you'll learn how to use Python to train decision trees and tree-based models with the user-friendly scikit-learn machine learning library. You'll understand the advantages and shortcomings of trees and demonstrate how ensembling can alleviate these shortcomings. Finally, you'll also understand how to tune the most influential hyperparameters in order to get the most out of your models.
 
 ## 2.Overview
 
-* **Chap 1:** Classification And Regression Tree (CART)
+* **Chap 1:** Classification And Regression Tree (CART) *(Done)*
 
   > Introduction to a set of supervised learning models known as Classification-And-Regression-Tree or **CART**.
 
@@ -47,7 +47,7 @@ To understand trees more concretely, we'll try to predict whether a tumor is mal
 
 ![png](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-100335@2x.png)
 
-> The figure here shows a scatterplot of two cancerous cell features with malignant-tumors in blue and benign-tumors in red.
+> The figure here shows a scatterplot of two cancerous cell features with malignant-tumors in $\color{blue}{blue}$  and benign-tumors in $\color{red}{red}$ .
 
 When a classification tree is trained on this dataset, the tree learns a sequence of if-else questions with each question involving one feature and one split-point. Take a look at the tree diagram here:
 
@@ -71,9 +71,9 @@ In order to obtain an unbiased estimate of a model's performance, you must evalu
 ```python
 # Split dataset into 80% train, 20% test.
 X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                               test_size=0.2,
-                                               stratify=y,
-                                               random_state=1)
+                                                    test_size=0.2,
+                                                    stratify=y,
+                                                    random_state=1)
 ```
 
 > Set the parameter stratify to y in order for the train and test sets to have same proportion of class labels as the unspilt dataset.
@@ -168,7 +168,9 @@ $$
 IG(\ f\ , \ sp\ )\ =\ I(\ parent\ )\ -\ \bigg(\frac{N_{left}}{N}\ I(\ left\ )+\frac{N_{right}}{N}\ I(\ right\ )\bigg)
 $$
 
-> f: feature           sp: split-point
+> *f: feature*         
+>
+> *sp: split-point*
 
 A question that you may have in mind here is: 'What criterion is used to measure the impurity of a node?' Well, there are different criteria you can use among which are the `gini-index` and `entropy`. Let's describe how a classification tree learns.
 
@@ -195,9 +197,9 @@ from sklearn.metrics import accuracy_score
 
 # Split dataset into 80% train, 20% test
 X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                              test_size=0.2,
-                                              stratify=y,
-                                              random_state=1)
+                                                   test_size=0.2,
+                                                   stratify=y,
+                                                   random_state=1)
 # Instantiate dt, set 'criterion' to 'gini'
 dt = DecisionTreeClassifier(criterion='gini', random_stat=1)
 ```
@@ -246,7 +248,8 @@ Our task is to predict the mpg consumption  of a car given these six features. T
 
 ![WX20191106-212039](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-212039.png)
 
-<center>Auto-mpg with one feature<center>
+<center> Auto-mpg with one feature <center>
+
 
 > A 2D scatter plot of mpg versus displ shows that the mpg-consumption decreases nonlinearly with displacement.
 >
@@ -272,8 +275,8 @@ from sklearn.metrics import mean_squared_error as MSE
 ```python
 # Split data into 80% train and 20% test
 X_train， X_test， y_train, y_test = train_test_split(X, y,
-                                              test_size=0.2,
-                                              random_state=3)
+                                                     test_size=0.2,
+                                                     random_state=3)
 ```
 
 > Then, split the data into 80%-train and 20%-test using `train_test_split`.
@@ -339,9 +342,9 @@ To highlight the importance of the flexibility of regression trees, take a look 
 
 ![WX20191106-235128@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191106-235128@2x.png)
 
-> On the left we have a scatter plot of the data in blue along with the predictions of a linear regression model shown in black. The linear model fails to capture the non-linear trend exhibited by the data.
+> On the left we have a scatter plot of the data in $\color{blue}{blue}$  along with the predictions of a linear regression model shown in black. The linear model fails to capture the non-linear trend exhibited by the data.
 >
-> On the right, we have the same scatter plot along with a red line corresponding to the predictions of the regression tree that you traind earlier. The regression tree shows a greater flexibility and is able to capture the non-linearity, though not fully.
+> On the right, we have the same scatter plot along with a $\color{red}{red}$  line corresponding to the predictions of the regression tree that you traind earlier. The regression tree shows a greater flexibility and is able to capture the non-linearity, though not fully.
 
 In the next chapter, you'll aggregate the predictions of a set of trees that are trained differently to obtain better results.
 
@@ -349,5 +352,225 @@ In the next chapter, you'll aggregate the predictions of a set of trees that are
 
 ### 4.1 Generalization Error
 
+**Supervised Learning - Under the Hood**
 
+* Supervised Learning:  $y=f(x)$ , $f$ is unknown
 
+In supervised learning, you make the assumption that there's a mapping f between features and labels. You can express this as  $y=f(x)$
+
+![WX20191107-150448@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-150448@2x.png)
+
+> $f$  which is shown here is an unknown function that you want to determine. In reality, data generation is always accompanied with randomness or noise like the $\color{blue}{blue}$  points shown here.
+
+**Goals of Supervised Learning**
+
+* Find a model  $\hat f$ that best approximates $f:\hat f \approx f$ 
+* $\hat f$ can be Logistic Regression, Decision Tree, Neural Network... 
+* Discard noise as much as possible.
+* **End goal:** $\hat f$ should achieve a low predictive error on unseen dataset.
+
+You may encounter two difficulties when approximating $f$:
+
+* **Overfitting:** $\hat f(x)$ fits the training set noise.
+* **Underfitting:** $\hat f$ is not flexible enough to approximate $f$ .
+
+**Overfitting**
+
+When a model overfits the training set, its predictive power on unseen datasets is pretty low.
+
+![WX20191107-152659@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-152659@2x.png)
+
+> This is illustrated by the predictions of the decision tree regressor shown here in $\color{red}{red}$ . 
+
+The model clearly memorized the noise present in the training set. Such model achieves a low training set error and a high test set error.
+
+**Underfitting**
+
+![WX20191107-153240@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-153240@2x.png)
+
+When a model underfits the data, like the regression tree whose predictions are shown here in $\color{red}{red}$ , the training set error is roughly equal to the test set error. However, both errors are relatively high. Now the trained model isn't flexible enough to capture the dependency between features and labels. 
+
+In analogy, it's like teaching calculus to a 3-year old. The child does not have the required mental abstraction  level that enables him to understand calculus.
+
+**Generalization Error**
+
+The generalization error of a model tells you how much it generalizes on unseen data. It can be decomposed into 3 terms: `bias`, `variance` and `irreducible error` where the irreducible error is the error contribution of noise.
+
+* **Generalization Error of  $\hat f$:** Dose $\hat f$ generalize well on unseen data? 	
+
+$$
+Generalization\ Error\ of\ \hat f = bias^2 + variance+irreducible\ error
+$$
+
+* **Bias:** error term that tells you, on average, how much $\hat f \neq f$ . High bias models lead to underfitting.
+
+  > To illustrate this consider the high bias model shown here in black; this model is not flexible enough to approximate the true function $f$ in $\color{red}{red}$ .
+
+![WX20191107-160602@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-160602@2x.png)
+
+* **Variance:** tells you how much $\hat f$ is inconsistent over different sets. High variance models lead to overfitting. The complexity of a model sets its flexibility to approximate the true function $f$.
+
+  > Consider the high variance model shown here in black; in this case, $\hat f$ follows the training data points so closely that it misses the true function $f$ shown in $\color{red}{red}$ .
+
+![WX20191107-161947@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-161947@2x.png)
+
+**Model Complexity**
+
+The complexity of a model sets its flexibility to approximate the true function $f$.
+
+For example: increasing the maximum-tree-depth increases the complesity of a decision tree.
+
+> The diagram here shows how the best model complexity corresponds to the lowest generalization error.
+
+![WX20191107-164911@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-164911@2x.png)
+
+> When the model complexity increases, the variance increases while the bias decreases. Conversely, when model complexity decreases, variance decreases and bias increase. 
+
+Your goal is to find the model complexity that achieves the lowest generalization error. Since this error is the sum of three terms with the irreducible error being constant, you need to find a balance between bias and variance because as one increases the other decreases. This is know as the `bias-variance trad-off` .
+
+Visually, you can imagine approximating $\hat f$ as aiming at the center of a shooting-target where the center is the true function $f$ . 
+
+![WX20191107-170420@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-170420@2x.png)
+
+> If $\hat f$ is low bias and low variance, your shots will be closely clustered around the center. 
+>
+> If $\hat f$ is high variance and high bias, not only will your shots miss the target but they would also be spread all around the shooting target.
+
+### 4.2 Diagnose Bias and Variance Problems
+
+**Estimating the Generalization Error**
+
+Now the question is given that you've trained a supervised machine learning model labeled $\hat f$ , how do you estimate the $\hat f$'s generalization error ? So we are here to disscuss how to diagnose bias and variance problems.
+
+Actually, this cannot be done directly because: 
+
+* $f$  is unknown, 
+* Usually you only have one dataset,
+* Noise is unpredictable.
+
+So a solution to this is :
+
+* Split the data to training and test sets,
+* fit $\hat f$ to the training set,
+* evaluate the error of $\hat f$ on the **unseen** test set,
+* Generalization error of $\hat f \approx$ test set error of $\hat f$  
+
+**Better Model Evaluation with Cross-Validation**
+
+Usually, the test set should be kept untouched until one is confident about $\hat f$'s performance. It should only be used to evaluate $\hat f$ final performance of error. So evaluating $\hat f$'s performance on the training set may produce an optimistic estimation of the error because $\hat f$ was already exposed to the training set when it was fit.
+
+To obtain a reliable estimate of $\hat f$'s performance, you should use a technique called  `cross-validation` or `CV`:
+
+* K-Fold CV
+* Hold-Out CV
+
+CV can be performed using K-Fold-CV or hold-out-CV. In this lesson, we'll only be explaining K-fold-CV.The diagram here illustrate this technique for K=10:
+
+![WX20191107-175100@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191107-175100@2x.png)
+
+* The train set (T) is split randomly into 10 partitions or folds
+* The error of $\hat f$ is evaluated 10 times on the 10 folds
+* Each time, one fold is picked for evaluation after training $\hat f$ on the other 9 folds.
+* At the end, you'll obtain a list 10 errors. 
+
+Finally, as shown in this formula, the CV-error is computed as the mean of the 10 obtained errors:
+$$
+CV\ error =\frac{E_1+...+E_{10}}{10}
+$$
+Once you have computed $\hat f$'s cross-validation-error, you can check if it is greater than $\hat f$'s training set error.
+
+**Diagnose Variance Problems**
+
+* If $\hat f$ suffers from **high variance**: CV error of $\hat f$ > training set error of $\hat f$.
+
+  > $\hat f$  is said to overfit the training set. To remedy overfitting:
+  >
+  > * Decrease model complexity
+  > * for ex: decrease max depth, increase min sample per leaf, ...
+  > * Gather more data, ...
+
+**Diagnose Bias Problems**
+
+* If $\hat f$ suffers from **high bias**: CV error of $\hat f \approx$ training set error of $\hat f$ >> desired error 
+
+  > $\hat f$ is said to underfoot the training set. To remedy underfitting:
+  >
+  > * Increase model  complexity
+  > * for ex: increase max depth, decrease min samples per leaf, ...
+  > * Gather more relevant feature
+
+**K-Fold CV in  Sklearn on the Auto Dataset**
+
+Let's now see how we can perform K-fold-cross-validation using scikit-learn on the auto-dataset.
+
+In addition to the usual imports, you should also import the function `cross_val_score()` from `sklearn.model_selection`.
+
+```python
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error as MSE
+from sklearn.model_selection import cross_val_score
+# Set seed for reproducbility
+SEED = 123
+# Split data into 70% train and 30% test
+X_train, X_test, y_train, y_test = train_test_split(X, y
+                                                    test_size=0.3,
+                                                    random_state=SEED)
+# Instantiate decision tree regressor and  assign it to 'dt'
+dt = DecisionTreeRegressor(max_depth=4,
+                           min_samples_leaf=0.14,
+                           random_state=SEED)
+```
+
+Next, call `cross_val_score()` by passing `dt`, `X_train`, `y_train`; set the parameters `cv` to 10 for 10-fold-cross-validation and scoring to `neg_mean_squared_error` to compute the negative-mean-squared-errors.
+
+```python
+# Evaluate the list of MSE ontraind by 10-fold CV
+# Set n_jobs to -1 in order to exploit all CPU cores in computation
+MSE_CV = - cross_val_score(dt, X_train, y_train, cv=10,
+                           scoring='neg_mean_squared_error',
+                           n_jobs=1)
+```
+
+> The  scoring parameter was set so because cross_val_score () does not allow computing the mean-squared-errors directly.
+
+The result is a numpy-array of the 10 negative mean-squared-errors achieved on the 10-folds. You can multiply the result by -1 to obtain an array of CV-MSE.
+
+The CV-mean-squared-error can be determined as the mean of MSE_CV.
+
+```python
+# Fit 'dt' to  the training set
+dt.fit(X_train，y_train)
+# Predict the labels of training set
+y_pred_train = dt.predict(X_train)
+# Predict the labels of test set
+y_pred_test = dt.predict(X_test)
+# CV MSE
+print('CV MSE: {:.2f}'.format(MSE_CV.mean()))
+```
+
+```python
+CV MSE: 20.51
+```
+
+Finally, you can use the function `MSE` to evaluate the train and test set mean-squared-errors.
+
+```python
+# Training set MSE
+print('Train MSE: {:.2f}'.format(MSE(y_train, y_pred_train)))
+```
+
+```python
+Train MSE: 15.30
+```
+
+```python
+# Test set MSE
+print('Test MSE: {:.2f}'.format(MSE(y_test, y_pred_test)))
+```
+
+```python
+Test MSE: 20.92
+```
+
+Given that the training set error is smaller than the CV-error, we can deduce that dt overfits the training set and that it suffers from high variance. Notice how the CV and test set errors are roughly equal.
