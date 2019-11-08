@@ -717,4 +717,49 @@ This accuracy is higher than that achieved by any of the individual models in th
 
 ## 5. Chapter 3: Bagging and Random Forests
 
+### 5.1 Bagging
+
+In the last chapter , you learned that  the Voting Classifier is an ensemble of models that are fit to the same training set using different allorithms. You also saw that the final predictions were obtained by majority voting.
+
+In Bagging, the ensemble is formed by models that use the same training algorithm. However, these models are not trained on the entire training set. Instead, each model is trained on a different subset of the data.
+
+**Ensemble Methods**
+
+`Voting Classifier`
+
+* Same training set
+* algorithms
+
+`Bagging`
+
+* One algorithm
+* subsets of the train set
+
+**Bagging**
+
+* Bagging: stands for *Bootstrap Aggregation*
+* Uses a technique known as the bootstrap
+*  Reduces variance of individual models in the ensemble 
+
+**Bootstrap**
+
+Let's first try to understand what the bootstrap method is.
+
+![WX20191108-232239@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191108-232239@2x.png)
+
+Consider the case where you have 3 balls labeled A, B and C. A bootstrap sample is a sample drawn from this with replacement. By replacement, we mean that any ball can be drawn many times. For example, in the first bootstrap sample shown in the diagram here, B was drawn 3 times in raw. In the second bootstrap sample, A was drawn two times while B was drawn once, and so on. You may now ask how bootstrapping can help us produce an ensemble.
+
+**Bagging: Training**
+
+In fact, in the training phase, bagging consists of drawing N different bootstrap samples from the training set.
+
+![WX20191108-233427@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191108-233427@2x.png)
+
+As shown in the diagram here, each of these bootstrap samples are then used to train N models that use the same algorithm.
+
+**Bagging: Prediction**
+![WX20191108-233641@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191108-233641@2x.png)
+
+
+
 $\color{red}{to\ be\ continued...}$
