@@ -760,6 +760,64 @@ As shown in the diagram here, each of these bootstrap samples are then used to t
 **Bagging: Prediction**
 ![WX20191108-233641@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191108-233641@2x.png)
 
+When a new instance is fed to the different models forming the bagging ensemble, each model outputs its prediction. The meta model collects these predictions and outputs a final prediction depending on the nature of the problem.
+
+**Bagging: Classification & Regression**
+
+`Classification`:
+
+* Aggregates predictions by majority voting
+* The corresponding classifier in scikit-learn is `Bagging Classifier`
+
+`Regression`:
+
+* Aggregates predictions through averaging
+* `BaggingRegressor` in scikit-learn
+
+**Bagging Classifier in sklearn(Breast-Cancer dataset)**
+
+```python
+# Import models and utility functions
+from sklearn.ensemble import BaggingClassifer
+from Sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
+# Set seed for reproducibility
+SEED = 1
+
+# Split data into 70% train and 30% test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3
+                                                    stratify=y,
+                                                   random_state=SEED)
+# Instantiate a classification-tree 'dt'
+dt = DecisionTreeClassifier(max_depth=4,
+                            min_sample_leaf=0.16,
+                            random_state=SEED)
+```
+
+You can then instantiate a BaggingClassifier `bc` that consists of 300 classification trees `dt`.
+
+```python
+# Instantiate a BaggingClassifier 'bc'
+bc = BaggingClassifier(base_estimator, n_estimators=300, n_jobs=-1)
+
+# Fit 'bc' to the training set
+bc.fit(X_train, y_train)
+# Predict test set labels
+y_pred = bc.predict(X_test)
+
+# Evaluate and print test-set accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print('Accuracy of Bagging Classifier: {:.3f}'.format(accuracy))
+```
+
+```python
+Accuracy of Bagging Classifier: 0.936
+```
+
+> Train the classification tree `dt`, which is the base estimator here, to the same training set would lead to a test set accuracy of 88.9%. The result highlights how bagging outperform the base estimator `dt`.
+
 
 
 $\color{red}{to\ be\ continued...}$
