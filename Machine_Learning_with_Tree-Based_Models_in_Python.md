@@ -818,6 +818,111 @@ Accuracy of Bagging Classifier: 0.936
 
 > Train the classification tree `dt`, which is the base estimator here, to the same training set would lead to a test set accuracy of 88.9%. The result highlights how bagging outperform the base estimator `dt`.
 
+### 5.2 Out of Bag Evaluation
+
+Recall that in bagging,
+
+* Some instances may be sampled several time for one model
+* Other instances may not be sampled at all
+
+**Out of Bag (OOB) instances**
+
+* On average, for each model, 63% of the training instances are sampled.
+* The remaining 37% constitute the OOB instances
+
+Since OOB instances are not seen by a model during training, these can be used to estimat the performance of the ensemble without the need for cross-validation.This technique is known as `OOB-evaluation`. To understand OOB-evaluation more concretely, take a look at this diagram.
+
+![WX20191122-170322@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191122-170322@2x.png)
+
+Here, for each model, the bootstrap instances are shown in $\color{blue}{blue}$ while the OOB-instances are shown in $\color{red}{red}$. Each of the N models constituting the ensemble is then trained on its corresponding bootstrap samples and evaluated on the OOB instances. This leads to the obtainment of N OOB scores labeled OOB1 to OOBN. 
+
+The OOB-score of the bagging ensemble is evaluated as the average of these N OOB scores as shown by the formula on top. 
+
+**OOB Evaluation in sklearn(Breast Cancer Dataset)**
+
+```python
+# Import models and split utility function
+from sklrean.ensemble import BaggingClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
+# Set seed for reproducibility
+SEED = 1
+
+# Split data into 70% train and 30% test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
+                                                    stratify=y,
+                                                    random_state=SEED)
+
+
+# Instantiate a  classification-tree 'dt'
+dt = DecisionTreeClassifier(max_depth=4,
+                            min_samples_leaf=0.16,
+                            random_state=SEED)
+
+# Instantiate a  BaggingClassifier 'bc'; set oob_score=True
+bc = BaggingClassifier(base_estimator=dt, n_estimators=300,
+                       oob_score=True, n_jobs=-1)
+
+# Fit 'bc' to the training set
+bc.fit(X_train, y_train)
+
+# Predict the test set labels
+y_pred = bc.predict(X_test)
+
+# Evaluate test set accuracy
+test_accuracy = accuracy_score(y_test, y_pred)
+
+# Extract the OOB accuracy from 'bc'
+oob_accuracy = bc.oob_score_
+
+# Print test set accuracy
+print('Test set accuracy: {:.3f}'.format(test_accuracy))
+# Print OOB accuracy
+print('OOB accuracy: {:.3f}'.format(oob_accuracy))
+```
+
+```python
+Test set accuracy: 0.936
+OOB accuracy: 0.925
+```
+
+The two obtained accuracies are pretty close though not exactly equal. These results highlight how OOB-evaluation can be an efficient technique to obtain a performance estimate of a bagged-ensemble on unseen data without performing cross-validation.
+
+### 5.3 Random Forests
+
+**Bagging**
+
+* Base estimator: Decision Tree, Logistic Regression, Neural Net, ...
+* Each estimator is trained on a distinct bootstrap sample of the training set 
+* Estimators use all features for training and prediction
+
+**Further Diversity with Random Forests**
+
+* Base estimator: Decision Tree
+
+* Each estimator is trained on a different bootstrap sample having the same size as th training set.
+
+* RF introduces further randomization than bagging when training each of the base estimators.
+
+* *d* features are sampled at each node without replacement
+
+  > (*d<total* number of features) 
+
+**RF Training**
+
+The diagram here shows the training procedure for random forests.
+
+![WX20191122-192431@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191122-192431@2x.png)
+
+Notice how each tree forming the ensemble is trained on a different bootstrap sample from the training set. In addition, when a tree is trained, at each node, only d features are sampled from all features without replacement. The node is then split using the sampled feature that maximizes information gain. In scikit-learn d defaults to the square-root of the number of features. （For example, if there are 100 features, only 10 features are sampled at each node.）
+
+**RF Prediction**
+
+![WX20191122-195313@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191122-195313@2x.png)
+
 
 
 $\color{red}{to\ be\ continued...}$
+
