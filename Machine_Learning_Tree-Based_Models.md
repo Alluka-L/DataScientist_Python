@@ -988,7 +988,7 @@ import matplotlib.pyplot as plot
 importances_rf = pd.Series(rf.feature_importance_, index = X.columns)
 
 # Sort importances_rf
- sorted_importances_rf = importances_rf.sort_values()
+sorted_importances_rf = importances_rf.sort_values()
   
 # Make a horizontal bar plot
 sorted_importances_rf.plot(kind='barh', color='lightgreen')
@@ -1002,6 +1002,97 @@ The results show that,  according to rf, displ, size, weight and hp are the most
 ## 6. Chapter 4: Boosting
 
 ### 6.1 Adaboost
+
+Boosting refers to an ensemble method in which many predictors are trained and each predictor learns from the errors of its predecessor.
+
+**Boosting**
+
+* Boosting: Ensemble method combining several weak learners to form a strong learner.
+* Weak learner: Model doing slightly better than random guessing
+* Example of weak learner: Decision stump( CART whose maximum depth is 1)
+* Train an ensemble of predictors sequentially
+* Each predictor tries to correct its predecessor
+* 2 popular boosting methods:
+  * AdaBoost
+  * Gradient Boosting
+
+**Adaboost**
+
+* Stands for Adaptive Boosting
+* Each predictor pays more attention to the instances wrongly predicted by its predecessor
+* Achieved by changing the weights of training instances
+* Each predictor is assigned a coefficient  $\alpha$ that weights its contribution in the ensemble's final prediction
+* $\alpha$ depends on the predictor's training error
+
+**AdaBoost: Training**
+
+![WX20191203-011444@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191203-011444@2x.png)
+
+As shown in the diagram, there are N predictors in total.
+
+First, predictor1 is trained on the initial dataset (X, y), and the training error for predictor1 is determined. This error can then be used to determine $\alpha_1$ which is predictor1's coefficient. $\alpha_1$ is then used to determine the weight $w^{(2)}$ of the training instances for predictor2.
+
+Notice how the incorrectly predicted instances shown in $\color{green}{green}$ acquire higher weights. When the weighted instances are used to train predictor2, this predictor is forced to pay more attention to the incorrectly predicted instances. This process is repeated sequentially, until the N predictors forming the ensemble are trained.
+
+An important parameter used in training is the learning rate $\eta$ .
+
+![WX20191203-015001@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191203-015001@2x.png)
+
+$\eta$ is a number between 0 and 1; it is used to shrink the coefficient $\alpha$ of a trained predictor. It's important to note that there's a tradeoff between $\eta$ and the number of estimators. A smaller value of $\eta$ should be compensated by a greater number of estimators.
+
+**AdaBoost: Prediction**
+
+Once all the predictors in the ensemble are trained, the label of a new instance can be predicted depending on the nature of the problem.
+
+* Classification
+  * Weighted majority voting
+  * In sklearn: `AdaBoostClassifier`
+* Regression
+  * Weighted average
+  * In sklearn: `AdaBoostRegressor
+
+It's important to note that individual predictors need not to be CARTs. However CARTs are used most of the time in boosting because of their high variance.
+
+Alright, let's fit an AdaBoostClassifier to the breast cancer dataset and evaluate its `ROC-AUC` score.
+
+```python
+# Import models and utility functions
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import train_test_split
+
+# Set seed for reproducibility
+SEED = 1
+
+# Split dataset into 70% train and 30% test
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,
+                                                    test_size=0.3,
+                                                    random_state=SEED)
+# Instantiate a classification-tree 'dt'
+dt = DecisionTreeClassifier(max_depth=1, random_state=SEED)
+
+# Instantiate a AdaBoost classifier 'adb_clf'
+adb_clf = AdaBoostClassifier(base_estimator=dt, n_estimators=100)
+
+# Fit 'adb_clf' to the training set
+adb_clf.fit(X_train, y_train)
+
+# Predict the test set probabilities positive class
+y_pred_proba = adb_clf.predict_proba(X_test)[:, 1]
+
+# Evaluate test set roc-auc score
+adb_clf_roc_auc_score = roc_auc_score(y_test, y_pred_proba)
+
+# Print adb_clf_roc_auc_score
+print('ROC AUC score: {:.2f}'.format(adb_clf_roc_auc_score))
+```
+
+```python
+ROC AUC score: 0.99
+```
+
+
 
 
 
