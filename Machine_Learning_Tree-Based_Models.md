@@ -1,4 +1,4 @@
-# Machine Learning with Tree-Based Models in Python
+# Machine Learning with Tree-Based Models
 
 ## 1.Tutorial  Description
 
@@ -14,7 +14,7 @@
 
   > Understand the notions of bias-variance trade-off and model ensembleling.
 
-* **Chap 3:** Bagging and Random Forests
+* **Chap 3:** Bagging and Random Forests$\color{green}{(Done)}$
 
   > Introduces you to Bagging and Random Forests.	
 
@@ -902,13 +902,13 @@ The two obtained accuracies are pretty close though not exactly equal. These res
 
 * Base estimator: Decision Tree
 
-* Each estimator is trained on a different bootstrap sample having the same size as th training set.
+* Each estimator is trained on a different bootstrap sample having the same size as the training set.
 
 * RF introduces further randomization than bagging when training each of the base estimators.
 
 * *d* features are sampled at each node without replacement
 
-  > (*d<total* number of features) 
+  > (*d < total* number of features) 
 
 **RF Training**
 
@@ -921,6 +921,87 @@ Notice how each tree forming the ensemble is trained on a different bootstrap sa
 **RF Prediction**
 
 ![WX20191122-195313@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191122-195313@2x.png)
+
+Once trained, predictions can be made on new instances. When a new instance is fed to the different base estimators, each of them outputs a prediction. The predictions are then collected by the random forests meta-classifier and a final prediction is made depending on the nature of the problem.
+
+**Classification**
+
+* Aggregates predictions by majority voting
+* `RandomForestClassifier` in scikit-learn
+
+**Regression**:
+
+* Aggregates predictions through averaging
+* `RandomForestRegressor` in scikit-learn
+
+In general, Random Forests achieves a lower variance than individual trees.
+
+```python
+# Basic imports
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error as MSE
+# Set seed for reproducibility
+SEED = 1
+
+# Split dataset into 70% train and 30% test
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                    test_size=0.3,
+                                                    random_state=SEED)
+# Instantiate a random forests regressor 'rf' 400 estimators
+rf = RandomForestRegressor(n_estimators=400,
+                           min_samples_leaf=0.12,
+                          random_state=SEED)
+# Fit 'rf' to the training set
+rf.fit(X_train, y_train)
+# Predict the test set labels 'y_pred'
+y_pred = rf.predict(X_test)
+# Evaluate the test set RMSE
+rmse_test = MSE(y_test, y_pred) ** (1/2)
+# Print the test set RMSE
+print('Test set RMSE of rf: {:.2f}'.format(rmse_test))
+```
+
+```python
+Test set RMSE of rf: 3.98
+```
+
+**Feature Importance in sklearn**
+
+When a tree based method is trained, the predictive power of a feature or its importance can be assessed.
+
+In `sklearn`:
+
+* how much the tree nodes use a particular feature(weighted average) to reduce impurity
+
+  > Note that the importance of a feature is expressed as a percentage indicating the weight of that feature in training and prediction.
+
+* accessed using the attribute `feature_importance_`
+
+To visualize the importance of features as assessed by rf, you can create a pandas series of the features importances as shown here and then sort this series and make a horiztonal-barplot.
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plot
+
+# Create a pd.Series of features importances
+importances_rf = pd.Series(rf.feature_importance_, index = X.columns)
+
+# Sort importances_rf
+ sorted_importances_rf = importances_rf.sort_values()
+  
+# Make a horizontal bar plot
+sorted_importances_rf.plot(kind='barh', color='lightgreen')
+plt.show()
+```
+
+![WX20191203-002838@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191203-002838@2x.png)
+
+The results show that,  according to rf, displ, size, weight and hp are the most predictive features.
+
+## 6. Chapter 4: Boosting
+
+### 6.1 Adaboost
 
 
 
