@@ -1088,11 +1088,85 @@ adb_clf_roc_auc_score = roc_auc_score(y_test, y_pred_proba)
 print('ROC AUC score: {:.2f}'.format(adb_clf_roc_auc_score))
 ```
 
-```python
+```output
 ROC AUC score: 0.99
 ```
 
+###  6.2 Gradient Boosting (GB)
 
+Gradient Boosting is a popular boosting algorithm that has a proven track record of winning many machine learning competitions.
+
+**Gradient Boosted Trees**
+
+* Sequential correction of predecessor's errors.
+* Does not tweak the weights of training instances.
+* Fit each predictor is trained using its predecessor's residual errors as labels.
+* Gradient Boosted Tree: a CART is used as a base learner.
+
+**Regression: Training**
+
+To understand how gradient boosted trees are trained for a regression problem, take a look at the diagram here.
+
+![WX20191203-191307@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191203-191307@2x.png)
+
+The ensemble consists of N trees. 
+
+Tree 1 is trained using the features matrix X and the dataset labels y. The predictions labeled $\hat y$ are used to determine the training set residual errors $r_1$ .
+
+Tree 2 is then trained using the features matrix X and the residual errors $r_1$ of Tree 1 as labels. The predicted residuals $\hat r_1$ are then used to determine the residuals of residuals which are labeled $r_2$ .
+
+This process is repeated until all of the N trees forming the ensemble are trained. An important parameter used in training gradient boosted trees is `shrinkge`.
+
+![WX20191203-192747@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191203-192747@2x.png)
+
+In this context, shrinkage refers to the fact that the prediction of each tree in the ensemble is shrinked after  it is multiplied by a learning rate $\eta$ which is a number between 0 and 1. Similarly to AdaBoost, there's a trade-off between $\eta$ and the number of estimators. Decreasing the learning rate needs to be compensated by increasing the number of estimators in order for the ensemble to reach a certain performance.
+
+**Prediction**
+
+Once all trees in the ensemble are trained, prediction can be made. When a new instance is available , each tree predicts a label and the final ensemble prediction is given by the formula shown in the following.
+
+* Regression:
+  * $y_{pred}=y_1+\eta r_1+...+\eta r_N$
+  * In sklearn: `GradientBoostingRegressor`
+
+* Classification:
+
+  * In sklearn: `GradientBoostingClassifier`
+
+  > A similar algorithm is used for calssification problems.
+
+```python
+# Import models and utility functions
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error as MSE
+
+# Set seed for reproducibility
+SEED =1 1
+
+# Split dataset into 70% train and 30% test
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                    test_size=0.3,
+                                                    random_state=SEED)
+# Instantiate a GradientBoostingRegressor 'gbt'
+gbt = GradientBoostingRegressor(n_estimators=300, max_depth=1, random_state=SEED)
+
+# Fit 'gbt' to the training set
+gbt.fit(X_train, y_train)
+
+# Predict the test set labels
+y_pred = gbt.predict(X_test)
+
+# Evaluate the test set RMSE
+rmse_test = MSE(y_test, y_pred) ** (1/2)
+
+# pirnt the test set RMSE
+print('Test set RMSE: {:.2f}'.format(rmse_test))
+```
+
+```output
+Test set RMSE: 4.01
+```
 
 
 
