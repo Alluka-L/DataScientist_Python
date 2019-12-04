@@ -1,10 +1,12 @@
+
+
 # Machine Learning with Tree-Based Models
 
-## 1.Tutorial  Description
+## 1. Tutorial  Description
 
 > Decision trees are supervised learning models used for problems involving classification and regression. Tree models present a high flexibility that comes at a price: on one hand, trees are able to capture complex non-linear relationships; on the other hand, they are prone to memorizing the noise present in a dataset. By aggregating the predictions of trees that are trained differently, ensemble methods take advantage of the flexibility of trees while reducing their tendency to memorize noise. Ensemble methods are used across a variety of fields and have a proven track record of winning many machine learning competitions. In this tutorial, you'll learn how to use Python to train decision trees and tree-based models with the user-friendly scikit-learn machine learning library. You'll understand the advantages and shortcomings of trees and demonstrate how ensembling can alleviate these shortcomings. Finally, you'll also understand how to tune the most influential hyperparameters in order to get the most out of your models.
 
-## 2.Overview
+## 2. Overview
 
 * **Chap 1:** Classification And Regression Tree (CART) $\color{green}{(Done)}$
 
@@ -18,15 +20,15 @@
 
   > Introduces you to Bagging and Random Forests.	
 
-* **Chap 4:** Boosting
+* **Chap 4:** Boosting$\color{green}{(Done)}$
 
   > Deals with boosting, specifically with AdaBoost and Gradiant Boosting.
 
-* **Chap 4:** Model Tuning
+* **Chap 4:** Model Tuning$\color{green}{(Done)}$
 
   > Understand how to  get the most out of your models through hyper-paremeter-tuning.
 
-## 3.Chapter 1 : Classification and Regression Trees
+## 3. Chapter 1 : Classification and Regression Trees
 
 > Classification and Regression Trees (CART) are a set of supervised learning models used for problems involving classification and regression. In this chapter, you'll be introduced to the CART algorithm
 
@@ -1142,7 +1144,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error as MSE
 
 # Set seed for reproducibility
-SEED =1 1
+SEED = 1
 
 # Split dataset into 70% train and 30% test
 X_train, X_test, y_train, y_test = train_test_split(X, y,
@@ -1168,7 +1170,318 @@ print('Test set RMSE: {:.2f}'.format(rmse_test))
 Test set RMSE: 4.01
 ```
 
+### 5.3 Stochastic Gradient Boosting (SGB)
 
+**Gradient Boosting: Cons**
 
-$\color{red}{to\ be\ continued...}$
+* Gradient boosting involves an exhaustive search procedure.
+* Each CART in the ensemble is trained to find the best split-points and the best features.
+* May lead to CARTs using the same split points and maybe the same features.
+
+To mitigate these effects, you can use an algorithm knowns as stochastic gradient boosting.
+
+**Stochastic Gradient Boosting**
+
+* Each tree is trained on a random subset of rows of the training data
+* The sampled instances (40% - 80% of the training set) are sampled without replacement.
+* Features are sampled (without replacement) when choosing split points
+* Result: further ensemble diversity
+* Effect: adding further variance to the ensemble of trees
+
+![WX20191203-213924@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191203-213924@2x.png)
+
+Let's take a closer look at the training procedure used in stochastic gradient boosing by examining the diagram shown in the following:
+
+First, instead of providing all the training instances to a tree, only a fraction of these instances are provided through sampling without replacement. 
+
+The sampled data is then used for training a tree. However, not all features are considered when a split is made. Instead, only a certain randomly rampled fraction of these features are used for this purpose.
+
+Once a tree is trained, predictions are made and the residual errors can be computed. These residual errors are multiplied by the learning rate $\eta$ and are fed to the next tree in the ensemble.
+
+This procedure is repeated swquentially until all the trees in the ensemble are trained.
+
+*The prediction procedure for a new instance in stochastic gradient boosting is similar to that of gradient boosting.* 
+
+```python
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error as MSE
+
+SEED = 1
+
+X_train, X_test, y_train, y_test, = train_test_split(X, y,
+                                                     test_size=0.3,
+                                                     random_state=SEED)
+```
+
+```python
+# Instantiate a stochastic  GradientBoostingRegressor 'sgbt'
+sgbt = GradientBoostingRegressor(max_depth=1,
+                                 subsample=0.8,
+                                 max_features=0.2,
+                                 n_estimators=300,
+                                 random_state=SEED)
+```
+
+> Here, the parameter `subsample` was set to 0.8 in order for each tree to sample 80% of data for training. The parameter `max_features` was set to 0.2 so that each tree uses 20% of available features to perform the best-split.
+
+```python
+sgbt.fit(X_train, y_train)
+y_pred = sgbt_predict(X_test)
+
+rmse_test = MSE(y_test, y_pred) ** (1/2)
+print('Test set RMSE: {:.2f}'.format(rmse_test))
+```
+
+Output:
+
+```output
+Test set RMSE: 3.95
+```
+
+## 7. Chapter 5: Model Tuning
+
+### 7.1 Tuning a CART's Hyperparameters
+
+**Hyperparameters**
+
+Machine learning model:
+
+* **parameters**: learned from data
+  * CART example: split-point of a node, split-feature of a node, ...
+* **hyperparameters**: not learned from data, set prior to training
+  * CART example: `max_depth`, `min_samples_leaf`, `splitting criterion` ...
+
+**What is hyperparameter tuning?**
+
+* **Problem**: search for a set of optimal hyperparameters for a learning algorithm.
+* **Solution**: find a set of optimal hyperparmeters that results in an optimal model.
+* **Optimal model**: yield an optimal **score**.
+* **Score**: in sklearn defaults to accuracy (classification) and $R^2$ (regression)
+* Cross validation is used to estimate the generalization performance
+
+**Why tune hyperparameters?**
+
+* In sklearn, a model's default hyperparameters are not optimal for all problems.
+* Hyperparameters should be tuned to obtain the best model performance
+
+**Approaches to hyperparameter tuning**
+
+* Grid Search
+* Random Search
+* Bayesian Optimization
+* Genetic Algorithms
+* ...
+
+**Grid search cross validation**
+
+* Manually set a grid of discrete hyperparameter values
+* Set a metric for scoring model performance
+* Search exhaustively through the grid
+* For each set of hyperparameters, evaluate each model's CV score.
+* The optimal hyperparameters are those of the model achieving the best CV score
+* Example:
+  * Hyperparameters grid:
+    * `max_depth` = {2, 3, 4}
+    * `min_samples_leaf` = {0.05, 0.1}
+  * hyperparameter space = { (2, 0.05), (2, 0.1), (3, 0.05), ... }
+  * CV scores = {$score_{(2, 0.05)}$, ... }
+  * optimal hyperparameters = set of hyperparameters corresponding to the best CV score
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+
+SEED = 1
+dt = DecisionTreeClassifier(random_state=SEED)
+print(dt.get_parames())
+```
+
+Output:
+
+```output
+{'class_weight': None,
+ 'criterion': 'gini',
+ 'max_depth': None,
+ 'max_features': None,
+ 'max_leaf_nodes': None,
+ 'min_impurity_decrease': 0.0,
+ 'min)impurity_split': None,
+ 'min_samples_leaf': 1,
+ 'min_samples_split': 2,
+ 'min_weight_fraction_leaf': 0.0,
+ 'presort': False,
+ 'random_state': 1,
+ 'splitter': 'best'}
+```
+
+```python
+from sklearn.model_selection import GridSearchCV
+
+# Define the grid of hyperparameters 'params_dt'
+params_dt = {
+  					 'max_depth': [3, 4, 5, 6]
+  					 'min_samples_leaf': [0.04, 0.06, 0.08]
+     				 'max_feature': [0.2, 0.4, 0.6, 0.8]
+            }
+# Instantiate a 10-fold CV grid serch object 'grid_dt'
+grid_dt = GridSearchCV(estimator=dt,
+                       param_grad=params_dt,
+                       scoring='accuracy',
+                       cv=10,
+                       n_jobs=-1)
+# Fit 'grid_dt' to the training data
+grid_dt.fit(X_train, y_train)
+
+# Extract best hyperaprameters from 'grid_dt'
+best_hyperparams = grid_dt.best_params_
+print('Best hyperparameters:\n', best_hyperparams)
+
+# Extract best CV score from 'grid_dt'
+best_CV_score = grid_dt.best_score_
+print('Best CV accuracy: {:.3f}'.format(best_CV_score))
+
+# Extract best model from 'grid_dt'
+best_model = grid_dt.best_estimator_
+
+# Evaluate test set accuracy
+test_acc = best_model.score(X_test, y_test)
+print('Test set accuracy of best model: {:.3f}'.format(test_acc))
+```
+
+Output:
+
+```output
+Best hyperparameters:
+  {'max_depth': 3, 'max_features': 0.4, 'min_samples_leaf': 0.06}
+Best CV accuracy: 0.938
+Test set accuracy of best model: 0.947
+```
+
+### 7.2 Tuning an RF's Hyperparameters
+
+In addition to the hyperparameters of the CARTs forming random forests, the ensemble itself is characterized by other hyperparameters.
+
+**Random Forests Hyperparameters**
+
+* CART hyperparameters
+* Number of estimators
+* boostrap
+* ...
+
+As a note, hyperparameter tuning is computationally expensive and may sometimes lead only to very slight improvement of a model's performance.
+
+For this reason, it is desired to weight the impact of tuning on the pipeline of your data analysis project as a whole in order to understand if it is worth pursuing.
+
+**Inspecting RF Hyperparameters in sklearn**
+
+```python
+from sklearn.ensemble import RandomForestRegressor
+
+SEED = 1
+
+rf = RandomForestRegressor(random_state=SEED)
+rf.get_params()
+```
+
+Output:
+
+```output
+{'bootstrap': True,
+ 'criterion': 'mse',
+ 'max_depth': None,
+ 'max_features': 'auto',
+ 'max_leaf_nodes': None,
+ 'min_impurity_decrease': 0.0,
+ 'min)impurity_split': None,
+ 'min_samples_leaf': 1,
+ 'min_samples_split': 2,
+ 'min_weight_fraction_leaf': 0.0,
+ 'n_estimators': 10,
+ 'n_jobs': -1,
+ 'oob_score': False,
+ 'random_state': 1,
+ 'warm_start': False}
+```
+
+> You can learn more about these hyperparameters by consulting scikit-learn's documentation.
+
+Now let's perform grid-search cross-validation.
+
+```python
+from sklearn.metrics import mean_squared_error as MSE
+from sklearn.model_selection import GridSearchCV
+
+params_rf = {'n_estimators': [300, 400, 500],
+             'max_depth': [4, 6, 8],
+             'min_samples_leaf': [0.1, 0.2],
+             'max_features': ['log2', 'sqrt']}
+grid_rf = GridSearchCV(estimator=rf,
+                       param_grid=params_rf,
+                       cv=3,
+                       scoring='neg_mean_squared_error',
+                       verbose=1,
+                       n_jobs=-1)
+
+grid_rf.fit(X_train, y_train)
+```
+
+![WX20191204-151244@2x](https://github.com/Alluka-L/DataScientist_Python/blob/master/imgs/WX20191204-151244@2x.png)
+
+```python
+best_hyperparams = grid_rf.best_params_
+print('Best hyperameters:\n', best_hyperparams)
+```
+
+Output:
+
+```output
+Best hyperameters:
+  {'max_depth': 4,
+   'max_feature': 'log2'
+   'min_sample_leaf': 0.1,
+   'n_estimators': 400}
+```
+
+```python
+best_model = grid_rf.best_estimator_
+y_pred = best_model.predict(X_test)
+rmse_test = MSE(y_test, y_pred) ** (1/2)
+print('Test set RMSE of rf: {:.2f}'.format(rmse_test))
+```
+
+Output:
+
+```output
+Test set RMSE of rf: 3.89
+```
+
+## 8. Congratulations!
+
+Take a moment to take a look at how far you have come!
+
+* Chapter 1: Decision-Tree Learning
+
+  > In chapter 1, you started off by understanding and applying the CART algorithm to train decision trees or CARTs for problems involving classification and regression
+
+* Chapter 2: Generalization Error, Cross-Validation, Ensembling
+
+  > In chapter 2, you understood what the generalization error of a supervised learning model is. In addition, you also learned how underfitting and overfitting can be diagnosed with cross-validation.
+  >
+  > Furthermore, you learned how model resembling can produce results that are more robust than indivisual decision trees.
+
+* Chapter 3: Bagging and Random Forests
+
+  >  In chapter 3, you applied randomization through bootstrapping and constructed a diverse set of trees in an ensemble through bagging. You also explored how random forests introduces further randomization by sampling features at the level of node in each tree forming the ensemble.
+
+* Chapter 4: AdaBoost and Gradient-Boosting
+
+  > In chapter 4, introduced you to boosting, an ensemble method in which predictors are trained sequentially and where each predictor tries to correct the errors made by its predecessor.
+  >
+  > Specifically, you saw how AdaBoost involved tweaking the weights of the training samples while gradient boosting involved fitting each tree using the residuals of its predecessor as labels.
+  >
+  > You also leaned how subsampling instances and features can lead to a better performance through Stochastic Gradient Boosting.
+
+* Chapter 5: Model Tuning
+
+  > Finally, in chapter 5, you explored hyperparameter tuning through Grid Search cross-validation and  you learnd how important it is to get the most out of your models.
 
