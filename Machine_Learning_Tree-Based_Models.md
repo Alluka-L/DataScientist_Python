@@ -24,7 +24,7 @@
 
   > Deals with boosting, specifically with AdaBoost and Gradiant Boosting.
 
-* **Chap 4:** Model Tuning$\color{green}{(Done)}$
+* **Chap 5:** Model Tuning$\color{green}{(Done)}$
 
   > Understand how to  get the most out of your models through hyper-paremeter-tuning.
 
